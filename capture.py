@@ -1,8 +1,15 @@
 import serial
-import sys
+import argparse
 
-s = serial.Serial(sys.argv[1])
-fh = open('post.dump','w')
+parser = argparse.ArgumentParser()
+parser.add_argument('--uart',help='WSTK VCOM UART')
+parser.add_argument('--output','-o',help='File to save post_dump() output')
+parser.add_argument('--debug',action='store_true',help='echo data to stdout')
+args = parser.parse_args()
+print(args)
+
+s = serial.Serial(args.uart)
+fh = open(args.output,'w')
 while True :
     ch = s.read()
     if None != ch :
@@ -10,7 +17,7 @@ while True :
             break
         ch = ch.decode()
         fh.write(ch)
-        print(ch,end='')
+        if args.debug: print(ch,end='')
 
 fh.close()
 s.close()

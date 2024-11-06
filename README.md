@@ -36,7 +36,15 @@ buffer.  Buffer can be sent to UART via <code>dlog_action_process()</code> after
 
 # Python code
 ## capture.py
-Simply reads from specifed UART, echoing to <code>stdout</code> and dumping to (hardcoded filename "post.dump")  Exits on EOF character.
+Simply reads from specifed UART dumping data into file until hitting EOF.
+usage: capture.py [-h] [--uart UART] [--output OUTPUT] [--debug]
+
+optional arguments:
+  -h, --help            show this help message and exit
+  --uart UART           WSTK VCOM UART
+  --output OUTPUT, -o OUTPUT
+                        File to save post_dump() output
+  --debug               echo data to stdout
 
 ## aem.py
 Script to capture AEM data from WST.

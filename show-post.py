@@ -10,6 +10,7 @@ parser.add_argument('--current',help='AEM current data file')
 parser.add_argument('--duration',type=float,help='Plot duration (ms)')
 parser.add_argument('--offset',type=float,default=.63,help='Plot offset (ms)')
 parser.add_argument('--em4wake',action='store_true',help='Saleae Ch8 is connected to EM4wake button, t=0 at falling edge, default is t=0 at rising edge of RESET')
+parser.add_argument('--debug',action='store_true',help='print random internals')
 args = parser.parse_args()
 
 def get_lines(file) :
@@ -36,7 +37,7 @@ def get_functions(lines) :
         function = source_lines[line].strip()
         if len(function) > 0 and ';' == function[-1] :
             function = function[:-1]
-        print(index,function)
+        if args.debug: print(index,function)
         functions.append(function)
     return functions
 
@@ -70,9 +71,9 @@ def push(state, start, stop) :
     if state < previous_state :
         raise RuntimeError('state %d < previous %d'%(state,previous_state))
     delta = stop - start
-    print("push:",state,start,stop,delta)
+    if args.debug: print("push:",state,start,stop,delta)
     if delta < 10e-9 :
-        print('Ignore')
+        if args.debug: print('Ignore')
         return
     start_stop[state] = (start,stop)
     label[state] = '%d %s'%(state,pretty(delta))
@@ -86,7 +87,7 @@ for line in lines[2:] :
     now,next_state,reset = extract(line)
     if reset :
         offset = now + 1.4e-3
-        print('offset: %f'%(offset*1e3))
+        if args.debug: print('offset: %f'%(offset*1e3))
         continue
     if args.em4wake and not got_zero :
         if 0 == next_state :
