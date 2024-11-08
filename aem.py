@@ -25,11 +25,16 @@ def smooth(value,width) :
     print(len(r),len(y),len(value))
     return r[5*width:][:len(value)]
     
-command = 'commander aem dump -s %s -o %s --duration %.1f'%(args.wstk,args.csv,args.duration)
+command = 'commander aem dump -o %s --duration %.1f'%(args.csv,args.duration)
+if None != args.wstk :
+    command += ' -s %s'%(args.wstk)
 if args.trigger > 0 :
     command += ' --triggerabove %.3f'%(args.trigger) 
 print('Running "%s"'%(command))
-os.system(command)
+rc = os.system(command)
+if 0 != rc :
+    raise RuntimeError('command failed.  Possibly you need to use --wstk=<serial>')
+print('%s returned %d'%(command,rc))
 lines = get_lines(args.csv)
 
 us = []

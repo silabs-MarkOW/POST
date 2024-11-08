@@ -2,8 +2,8 @@ import serial
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--uart',help='WSTK VCOM UART')
-parser.add_argument('--output','-o',help='File to save post_dump() output')
+parser.add_argument('--uart',help='WSTK VCOM UART',required=True)
+parser.add_argument('--output','-o',help='File to save post_dump() output',required=True)
 parser.add_argument('--debug',action='store_true',help='echo data to stdout')
 args = parser.parse_args()
 print(args)

@@ -2,9 +2,9 @@ import argparse
 import os
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--project',help='Project root folder')
-parser.add_argument('--xref',help='File containing UART output')
-parser.add_argument('--saleae',default='digital.csv',help='CSV from saleae')
+parser.add_argument('--project',help='Project root folder',required=True)
+parser.add_argument('--xref',help='File containing UART output',required=True)
+parser.add_argument('--saleae',default='digital.csv',help='CSV from saleae',required=True)
 parser.add_argument('--above',type=float,default=0,help='Lower limit (s)')
 parser.add_argument('--current',help='AEM current data file')
 parser.add_argument('--duration',type=float,help='Plot duration (ms)')
@@ -32,7 +32,11 @@ def get_functions(lines) :
         path = tokens[2][3:]
         source_lines = db.get(path)
         if None == source_lines :
-            source_lines = get_lines(args.project + path)
+            if '/' == args.project[-1] :
+                source_file = args.project + path
+            else :
+                source_file = args.project + '/' + path
+            source_lines = get_lines(source_file)
             db[path] = source_lines
         function = source_lines[line].strip()
         if len(function) > 0 and ';' == function[-1] :
